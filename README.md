@@ -2,7 +2,7 @@
 
 ## ダウンロード
 
-[ダウンロードはこちらから](https://github.com/kuro-water/wetris/releases/tag/v2.0.0)
+[ダウンロードはこちらから](https://github.com/kuro-water/wetris/releases/tag/v2.0.1)
 
 ## 操作方法
 

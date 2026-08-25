@@ -15,7 +15,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "electron": "31.2.1",
+        "electron": "^43.4.1",
         "ts-loader": "^9.5.1",
         "typed-query-selector": "^2.11.0",
         "typescript": "^5.5.3",

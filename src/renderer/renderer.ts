@@ -2,7 +2,6 @@ class WetrisRenderer {
     playerList: PlayerInfo[] = [];
     keyMap: KeyMap;
 
-
     constructor() {
         console.log("renderer started.");
     }
@@ -18,9 +17,15 @@ class WetrisRenderer {
         playerInfo.canvasField = document.getElementById(idList[0]) as HTMLCanvasElement;
         playerInfo.canvasHold = document.getElementById(idList[1]) as HTMLCanvasElement;
         playerInfo.canvasNext = document.getElementById(idList[2]) as HTMLCanvasElement;
-        playerInfo.canvasFieldContext = (document.getElementById(idList[0]) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
-        playerInfo.canvasHoldContext = (document.getElementById(idList[1]) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
-        playerInfo.canvasNextContext = (document.getElementById(idList[2]) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
+        playerInfo.canvasFieldContext = (
+            document.getElementById(idList[0]) as HTMLCanvasElement
+        ).getContext("2d") as CanvasRenderingContext2D;
+        playerInfo.canvasHoldContext = (
+            document.getElementById(idList[1]) as HTMLCanvasElement
+        ).getContext("2d") as CanvasRenderingContext2D;
+        playerInfo.canvasNextContext = (
+            document.getElementById(idList[2]) as HTMLCanvasElement
+        ).getContext("2d") as CanvasRenderingContext2D;
         playerInfo.labelScore = document.getElementById(idList[3]) as HTMLLabelElement;
         playerInfo.labelRen = document.getElementById(idList[4]) as HTMLLabelElement;
     }
@@ -29,7 +34,7 @@ class WetrisRenderer {
         this.keyMap = (await electronAPI.getConfig()).keyMap;
 
         window.addEventListener("beforeunload", (_event) => {
-            this.playerList.forEach(player => wetris.stop(player.idx));
+            this.playerList.forEach((player) => wetris.stop(player.idx));
         });
     }
 
@@ -72,7 +77,6 @@ class WetrisRenderer {
             // console.log("up:" + event.code);
         };
 
-
         /**
          * keyEvent
          * @description キー入力に対する処理を行う
@@ -89,29 +93,25 @@ class WetrisRenderer {
                 [this.keyMap.hardDrop]: () => wetris.hardDrop(player.idx),
                 [this.keyMap.rotateLeft]: () => wetris.rotateLeft(player.idx),
                 [this.keyMap.rotateRight]: () => wetris.rotateRight(player.idx),
-                [this.keyMap.hold]: () => wetris.hold(player.idx)
+                [this.keyMap.hold]: () => wetris.hold(player.idx),
             };
 
             const action = actions[event.code];
             if (action) {
                 action();
-            }
-            else {
+            } else {
                 console.log("unknown key");
             }
         };
-
     }
 
     drawInit() {
-
         const gameOver = (idx: number) => {
             this.playerList.forEach((_, i) => {
                 if (i !== idx) {
                     wetris.stop(i);
                     setCanvasStr(i, "WIN");
-                }
-                else {
+                } else {
                     setCanvasStr(i, "LOSE");
                 }
                 this.playerList[i].canvasFieldContext = null;
@@ -122,7 +122,9 @@ class WetrisRenderer {
 
         const setCanvasStr = (idx: number, str: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on setLabelScore\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on setLabelScore\nidx : ${idx}`,
+                );
             }
             const canvas = this.playerList[idx].canvasField;
             const context = this.playerList[idx].canvasFieldContext;
@@ -141,7 +143,9 @@ class WetrisRenderer {
          */
         const setLabelScore = (idx: number, score: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on setLabelScore\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on setLabelScore\nidx : ${idx}`,
+                );
             }
             this.playerList[idx].labelScore.innerText = score;
         };
@@ -155,7 +159,9 @@ class WetrisRenderer {
          */
         const setLabelRen = (idx: number, ren: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on setLabelRen\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on setLabelRen\nidx : ${idx}`,
+                );
             }
             this.playerList[idx].labelRen.innerText = ren;
         };
@@ -168,24 +174,31 @@ class WetrisRenderer {
          */
         const clearFieldContext = (idx: number) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on clearFieldContext\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on clearFieldContext\nidx : ${idx}`,
+                );
             }
             console.log("clearFieldContext");
             drawField(idx, INIT_FIELD);
 
             this.playerList[idx].canvasFieldContext.fillStyle = FRAME_COLOR;
-            this.playerList[idx].canvasFieldContext.fillRect(0, 0, BLOCK_SIZE, FIELD_CANVAS_SIZE[3]);
+            this.playerList[idx].canvasFieldContext.fillRect(
+                0,
+                0,
+                BLOCK_SIZE,
+                FIELD_CANVAS_SIZE[3],
+            );
             this.playerList[idx].canvasFieldContext.fillRect(
                 FIELD_CANVAS_SIZE[2] - BLOCK_SIZE,
                 0,
                 BLOCK_SIZE,
-                FIELD_CANVAS_SIZE[3]
+                FIELD_CANVAS_SIZE[3],
             );
             this.playerList[idx].canvasFieldContext.fillRect(
                 0,
                 FIELD_CANVAS_SIZE[3] - BLOCK_SIZE,
                 FIELD_CANVAS_SIZE[2],
-                BLOCK_SIZE
+                BLOCK_SIZE,
             );
             // 行っているのは以下と同等の操作
             // this.playerList[idx].canvasFieldContext.fillRect(0, 0, 20, 420);
@@ -201,11 +214,15 @@ class WetrisRenderer {
          */
         const clearHoldContext = (idx: number) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on clearHoldContext\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on clearHoldContext\nidx : ${idx}`,
+                );
             }
             console.log("clearHoldContext");
             this.playerList[idx].canvasHoldContext.fillStyle = BACKGROUND_COLOR;
-            this.playerList[idx].canvasHoldContext.fillRect(...(HOLD_CANVAS_SIZE as [number, number, number, number]));
+            this.playerList[idx].canvasHoldContext.fillRect(
+                ...(HOLD_CANVAS_SIZE as [number, number, number, number]),
+            );
         };
 
         ipcRenderer.on("clearHoldContext", clearHoldContext);
@@ -216,10 +233,14 @@ class WetrisRenderer {
          */
         const clearNextContext = (idx: number) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on clearNextContext\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on clearNextContext\nidx : ${idx}`,
+                );
             }
             this.playerList[idx].canvasNextContext.fillStyle = BACKGROUND_COLOR;
-            this.playerList[idx].canvasNextContext.fillRect(...(NEXT_CANVAS_SIZE as [number, number, number, number]));
+            this.playerList[idx].canvasNextContext.fillRect(
+                ...(NEXT_CANVAS_SIZE as [number, number, number, number]),
+            );
         };
 
         ipcRenderer.on("clearNextContext", clearNextContext);
@@ -232,7 +253,9 @@ class WetrisRenderer {
          */
         const drawBlock = (idx: number, block: Position, color: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on drawBlock\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on drawBlock\nidx : ${idx}`,
+                );
             }
             // console.log("draw block");
             // console.log("x:" + x + ",y:" + y + ",color:" + color);
@@ -241,7 +264,7 @@ class WetrisRenderer {
                 block.x * BLOCK_SIZE,
                 block.y * BLOCK_SIZE,
                 BLOCK_SIZE,
-                BLOCK_SIZE
+                BLOCK_SIZE,
             );
         };
 
@@ -256,7 +279,9 @@ class WetrisRenderer {
          */
         const drawMino = (idx: number, minoPos: Position, blocks: Position[], color: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on drawMino\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on drawMino\nidx : ${idx}`,
+                );
             }
             console.log("draw mino");
             for (const block of blocks) {
@@ -278,29 +303,45 @@ class WetrisRenderer {
          * @param {Position} postGhostPos
          * @param {number} idxMino
          */
-        const reDrawMino = (idx: number,
-                            preBlockPos: Position[],
-                            preMinoPos: Position,
-                            preGhostPos: Position,
-                            postBlockPos: Position[],
-                            postMinoPos: Position,
-                            postGhostPos: Position,
-                            idxMino: number
+        const reDrawMino = (
+            idx: number,
+            preBlockPos: Position[],
+            preMinoPos: Position,
+            preGhostPos: Position,
+            postBlockPos: Position[],
+            postMinoPos: Position,
+            postGhostPos: Position,
+            idxMino: number,
         ) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on reDrawMino\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on reDrawMino\nidx : ${idx}`,
+                );
             }
             console.log("move");
             for (const pos of preBlockPos) {
-                drawBlock(idx, { x: preGhostPos.x + pos.x, y: preGhostPos.y + pos.y }, BACKGROUND_COLOR);
-                drawBlock(idx, { x: preMinoPos.x + pos.x, y: preMinoPos.y + pos.y }, BACKGROUND_COLOR);
+                drawBlock(
+                    idx,
+                    { x: preGhostPos.x + pos.x, y: preGhostPos.y + pos.y },
+                    BACKGROUND_COLOR,
+                );
+                drawBlock(
+                    idx,
+                    { x: preMinoPos.x + pos.x, y: preMinoPos.y + pos.y },
+                    BACKGROUND_COLOR,
+                );
             }
             for (const pos of postBlockPos) {
                 drawBlock(
-                    idx, { x: postGhostPos.x + pos.x, y: postGhostPos.y + pos.y },
-                    GHOST_COLORS[idxMino]
+                    idx,
+                    { x: postGhostPos.x + pos.x, y: postGhostPos.y + pos.y },
+                    GHOST_COLORS[idxMino],
                 );
-                drawBlock(idx, { x: postMinoPos.x + pos.x, y: postMinoPos.y + pos.y }, MINO_COLORS[idxMino]);
+                drawBlock(
+                    idx,
+                    { x: postMinoPos.x + pos.x, y: postMinoPos.y + pos.y },
+                    MINO_COLORS[idxMino],
+                );
             }
         };
 
@@ -314,14 +355,16 @@ class WetrisRenderer {
          */
         const drawNextBlock = (idx: number, block: Position, color: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on drawNextBlock\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on drawNextBlock\nidx : ${idx}`,
+                );
             }
             this.playerList[idx].canvasNextContext.fillStyle = color;
             this.playerList[idx].canvasNextContext.fillRect(
                 block.x * BLOCK_SIZE,
                 block.y * BLOCK_SIZE,
                 BLOCK_SIZE,
-                BLOCK_SIZE
+                BLOCK_SIZE,
             );
         };
 
@@ -335,7 +378,9 @@ class WetrisRenderer {
          */
         const drawHoldBlock = (idx: number, block: Position, color: string) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on drawHoldBlock\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on drawHoldBlock\nidx : ${idx}`,
+                );
             }
             // console.log("draw hold block");
             // console.log("x:" + x + ",y:" + y + ",color:" + color);
@@ -344,7 +389,7 @@ class WetrisRenderer {
                 (1 + block.x) * BLOCK_SIZE,
                 (1 + block.y) * BLOCK_SIZE,
                 BLOCK_SIZE,
-                BLOCK_SIZE
+                BLOCK_SIZE,
             );
         };
 
@@ -357,7 +402,9 @@ class WetrisRenderer {
          */
         const drawField = (idx: number, field: number[][]) => {
             if (this.playerList[idx] === undefined) {
-                throw new Error(`this.playerList[idxWetris] is undefined on drawField\nidx : ${idx}`);
+                throw new Error(
+                    `this.playerList[idxWetris] is undefined on drawField\nidx : ${idx}`,
+                );
             }
             console.log("draw field");
             // console.log("i:" + this.field.length);
@@ -367,15 +414,14 @@ class WetrisRenderer {
                 for (let j = DRAW_FIELD_LEFT; j < DRAW_FIELD_LEFT + DRAW_FIELD_WIDTH; j++) {
                     if (field[i][j]) {
                         this.playerList[idx].canvasFieldContext.fillStyle = PLACED_MINO_COLOR;
-                    }
-                    else {
+                    } else {
                         this.playerList[idx].canvasFieldContext.fillStyle = BACKGROUND_COLOR;
                     }
                     this.playerList[idx].canvasFieldContext.fillRect(
                         j * BLOCK_SIZE,
                         (i - DRAW_FIELD_TOP) * BLOCK_SIZE,
                         BLOCK_SIZE,
-                        BLOCK_SIZE
+                        BLOCK_SIZE,
                     );
                     // console.log("draw:" + i + "," + j);
                 }
@@ -388,7 +434,13 @@ class WetrisRenderer {
 
 class SoloPlay extends WetrisRenderer {
     player: PlayerInfo = { idx: 0 };
-    playerIdList: ElementIdList = ["canvasPlayerField", "canvasPlayerHold", "canvasPlayerNext", "labelPlayerScore", "labelPlayerRen"];
+    playerIdList: ElementIdList = [
+        "canvasPlayerField",
+        "canvasPlayerHold",
+        "canvasPlayerNext",
+        "labelPlayerScore",
+        "labelPlayerRen",
+    ];
 
     // @Override
     constructor() {
@@ -411,7 +463,13 @@ class SoloPlay extends WetrisRenderer {
 
 class SoloCpu extends WetrisRenderer {
     cpu: PlayerInfo = { idx: 1 };
-    cpuIdList: ElementIdList = ["canvasCpuField", "canvasCpuHold", "canvasCpuNext", "labelCpuScore", "labelCpuRen"];
+    cpuIdList: ElementIdList = [
+        "canvasCpuField",
+        "canvasCpuHold",
+        "canvasCpuNext",
+        "labelCpuScore",
+        "labelCpuRen",
+    ];
 
     // @Override
     constructor() {
@@ -435,10 +493,22 @@ class SoloCpu extends WetrisRenderer {
 
 class PlayWithCpu extends WetrisRenderer {
     player: PlayerInfo = { idx: 0 };
-    playerIdList: ElementIdList = ["canvasPlayerField", "canvasPlayerHold", "canvasPlayerNext", "labelPlayerScore", "labelPlayerRen"];
+    playerIdList: ElementIdList = [
+        "canvasPlayerField",
+        "canvasPlayerHold",
+        "canvasPlayerNext",
+        "labelPlayerScore",
+        "labelPlayerRen",
+    ];
 
     cpu: PlayerInfo = { idx: 1 };
-    cpuIdList: ElementIdList = ["canvasCpuField", "canvasCpuHold", "canvasCpuNext", "labelCpuScore", "labelCpuRen"];
+    cpuIdList: ElementIdList = [
+        "canvasCpuField",
+        "canvasCpuHold",
+        "canvasCpuNext",
+        "labelCpuScore",
+        "labelCpuRen",
+    ];
 
     // @Override
     constructor() {
@@ -464,13 +534,41 @@ class PlayWithCpu extends WetrisRenderer {
     }
 }
 
+class SoloAi extends WetrisRenderer {
+    ai: PlayerInfo = { idx: 1 };
+    aiIdList: ElementIdList = [
+        "canvasAiField",
+        "canvasAiHold",
+        "canvasAiNext",
+        "labelAiScore",
+        "labelAiRen",
+    ];
+
+    // @Override
+    constructor() {
+        super();
+        this.wetrisInit();
+        // this.keyInit();
+        this.drawInit();
+    }
+
+    // @Override
+    async wetrisInit() {
+        await super.wetrisInit();
+        console.log("this is soloAi.html");
+
+        this.getElement(this.ai, this.aiIdList);
+        this.playerList[this.ai.idx] = this.ai;
+    }
+}
+
 const path = window.location.pathname;
 if (path.includes("soloPlay.html")) {
     new SoloPlay();
-}
-else if (path.includes("soloCpu.html")) {
+} else if (path.includes("soloCpu.html")) {
     new SoloCpu();
-}
-else if (path.includes("playWithCpu.html")) {
+} else if (path.includes("playWithCpu.html")) {
     new PlayWithCpu();
+} else if (path.includes("soloAi.html")) {
+    new SoloAi();
 }

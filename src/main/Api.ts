@@ -1,11 +1,14 @@
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
 import { AiWetrisCore } from "./AiWetrisCore";
+import { BrowserWindow } from "electron";
 
 export class Api {
     private server;
     private game: AiWetrisCore;
+    private getWindow: () => BrowserWindow;
 
-    constructor() {
+    constructor(getWindow: () => BrowserWindow) {
+        this.getWindow = getWindow;
         this.server = createServer((req: IncomingMessage, res: ServerResponse) => {
             this.handleRequest(req, res);
         });
@@ -20,6 +23,12 @@ export class Api {
 
     public stop(): void {
         this.server.close();
+    }
+
+    private draw(): void {
+        const window = this.getWindow();
+
+        window?.webContents.send("drawField", 1, this.game.field.field);
     }
 
     private async handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -47,6 +56,7 @@ export class Api {
         this.game = new AiWetrisCore();
         const candidates = this.game.getCandidates();
         const gameover = this.game.currentMino === null;
+        this.draw();
         this.sendJson(res, 200, { gameover: gameover, candidates });
     }
 
@@ -62,6 +72,7 @@ export class Api {
             const body = await this.readJson(req);
             const actions = body.actions;
             this.game.executeActions(actions);
+            this.draw();
 
             const gameover = this.game.currentMino === null;
             const candidates = this.game.getCandidates();

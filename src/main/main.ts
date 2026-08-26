@@ -35,9 +35,11 @@ ipcMain.handle("saveConfig", async (_event: IpcMainInvokeEvent, data: Config): P
 
 handleWetris();
 
+let mainWindow: typeof BrowserWindow;
+
 const createWindow = () => {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         // width: 512,
         // height: 768,
         width: 1280,
@@ -80,5 +82,5 @@ app.on("activate", () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and import them here.
 
-const api = new Api();
+const api = new Api(() => mainWindow);
 api.start(3001);

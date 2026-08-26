@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'"
+        />
+        <title>wetris</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="./bulma.min.css" />
+        <link rel="stylesheet" href="./wetris.css" />
+        <link rel="stylesheet" href="./buttons.css" />
+    </head>
+
+    <body>
+        <div id="divButtons">
+            <a class="button" href="./index.html">戻る</a>
+            <!-- <button class="button" id="buttonPrint">print</button>
+    <button class="button" id="buttonDraw">draw</button> -->
+            <!-- <button class="button" id="buttonUseArrow">矢印操作</button>
+    <button class="button" id="buttonUseWASD">WASD操作</button> -->
+        </div>
+        <div>
+            <canvas id="canvasAiHold" width="80" height="420"></canvas>
+            <canvas id="canvasAiField" width="240" height="420"></canvas>
+            <canvas id="canvasAiNext" width="80" height="420"></canvas>
+        </div>
+        <label id="labelAiScore">score:0</label>
+        <label id="labelAiRen">ren:0</label>
+    </body>
+
+    <!-- <script src="mino_data.js" type="module"></script> -->
+    <script src="./renderer.js" type="module"></script>
+</html>

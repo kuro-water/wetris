@@ -41,9 +41,12 @@ export class Cpu {
             // フィールドの評価値を求める
             const bestField = await this.getBestField(
                 this.mainWetris.currentMino.idxMino,
-                this.mainWetris.field
+                this.mainWetris.field,
             );
-            const holdMino = this.mainWetris.idxHoldMino === undefined ? this.mainWetris.nextMinos[this.mainWetris.nextMinos.length - 1] : this.mainWetris.idxHoldMino;
+            const holdMino =
+                this.mainWetris.idxHoldMino === undefined
+                    ? this.mainWetris.nextMinos[this.mainWetris.nextMinos.length - 1]
+                    : this.mainWetris.idxHoldMino;
             const bestFieldUsedHold = await this.getBestField(holdMino, this.mainWetris.field);
 
             // ゲーム終了時には終了
@@ -53,8 +56,7 @@ export class Cpu {
             if (bestFieldUsedHold.score < bestField.score) {
                 // bestField.fieldData.field.printField();
                 await this.moveMinoToMatchField(this.mainWetris, bestField.fieldData);
-            }
-            else {
+            } else {
                 // debug("I wanna hold");
                 // bestFieldUsedHold.fieldData.field.printField();
                 this.mainWetris.hold();
@@ -68,8 +70,7 @@ export class Cpu {
             if (Math.abs(fieldData.angle.angle - fieldData.angle.angle) === 3) {
                 // 左回転の方が速い
                 wetris.rotateLeft();
-            }
-            else {
+            } else {
                 wetris.rotateRight();
             }
             await sleep(ARR);
@@ -89,10 +90,10 @@ export class Cpu {
         // 一手で積めるフィールドを全探索し、そのフィールドの評価を行う
         const fieldDataList = await this.getAllFieldPattern(idxMino, field);
         const fieldInfoList = await Promise.all(
-            fieldDataList.map((fieldData) => this.getFieldInfo(fieldData))
+            fieldDataList.map((fieldData) => this.getFieldInfo(fieldData)),
         );
         const fieldScoreList = await Promise.all(
-            fieldInfoList.map((fieldInfo) => this.calcFieldScore(fieldInfo))
+            fieldInfoList.map((fieldInfo) => this.calcFieldScore(fieldInfo)),
         );
 
         // 評価値が最大のフィールドを返す
@@ -118,14 +119,12 @@ export class Cpu {
                 // this.trialWetris.field = field.clone();
                 // this.trialWetris.currentMino.field = this.trialWetris.field;
 
-                while (this.trialWetris.moveLeft()) {
-                }
+                while (this.trialWetris.moveLeft()) {}
                 if (!this.trialWetris.move({ x: movement, y: 0 })) {
                     // これ以上右に動かせない
                     break;
                 }
-                while (this.trialWetris.softDrop()) {
-                }
+                while (this.trialWetris.softDrop()) {}
                 const pos = this.trialWetris.currentMino.pos;
                 await this.trialWetris.set();
 
@@ -222,8 +221,7 @@ export class Cpu {
                     fieldData.field.isFilled({ x: x + 1, y: y })
                 ) {
                     trenchCount++;
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -253,7 +251,7 @@ export class Cpu {
         // 死にそうな高さは基本置かない
         if (fieldInfo.height - DRAW_FIELD_TOP < 5) {
             info("Too high!");
-            score *= (0 < score ? 0.01 : 100);
+            score *= 0 < score ? 0.01 : 100;
         }
 
         return { fieldData: fieldInfo.fieldData, score: score };

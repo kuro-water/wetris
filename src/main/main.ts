@@ -6,6 +6,7 @@ const store = new Store();
 import * as initConfig from "./initConfig.json";
 import { info } from "./messageUtil";
 import { handleWetris } from "./wetris";
+import { Api } from "./Api";
 
 // console.dir(store.store, { depth: null });
 
@@ -44,7 +45,7 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             // devTools: false //デバッグツールを開かない
-        }
+        },
     });
 
     // and load the index.html of the app.
@@ -78,3 +79,6 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and import them here.
+
+const api = new Api();
+api.start(3001);

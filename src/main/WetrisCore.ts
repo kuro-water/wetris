@@ -31,18 +31,19 @@ export class WetrisCore {
 
     totalLines = 0; // debug
 
-
-    protected start() {
+    protected start(autoStart = true) {
         this.makeNewMino();
-        this.callMainloop();
-        this.isMainloopActive = true;
+        if (autoStart) {
+            this.callMainloop();
+            this.isMainloopActive = true;
+        }
     }
 
-    constructor() {
+    constructor(autoStart = true) {
         // task("wetris constructor started.");
         this.field = new FieldCore();
         this.latestTime = Date.now();
-        this.start();
+        this.start(autoStart);
 
         // task("wetris constructor ended.");
     }
@@ -67,8 +68,7 @@ export class WetrisCore {
         if (this.move({ x: 0, y: 1 })) {
             this.isLocking = false;
             this.countKSKS = 0;
-        }
-        else {
+        } else {
             this.lockDown();
         }
     }
@@ -78,7 +78,6 @@ export class WetrisCore {
         this.isMainloopActive = false;
         info("game over");
     }
-
 
     public move(dif: Position): boolean {
         // 接地硬直中に入力されるとcurrentMinoが存在せずTypeErrorとなるため
@@ -140,8 +139,7 @@ export class WetrisCore {
             this.score += 1;
             // info("score:" + this.score);
             return true;
-        }
-        else {
+        } else {
             this.lockDown();
             return false;
         }
@@ -155,8 +153,7 @@ export class WetrisCore {
         this.score += 10;
 
         // 接地
-        while (this.softDrop()) {
-        }
+        while (this.softDrop()) {}
         await this.set();
     }
 
@@ -201,15 +198,13 @@ export class WetrisCore {
             if (this.isBtB) {
                 this.isBtB = !!this.modeTspin || lines === 4;
                 this.addScore(lines, this.ren, this.modeTspin, this.isBtB);
-            }
-            else {
+            } else {
                 this.addScore(lines, this.ren, this.modeTspin, this.isBtB);
                 this.isBtB = !!this.modeTspin || lines === 4;
             }
             // Delayが0でもsleepしてしまうと止まってしまう
             if (this.delDelay) await sleep(this.delDelay);
-        }
-        else {
+        } else {
             this.ren = -1;
             if (this.setDelay) await sleep(this.setDelay);
         }
@@ -217,7 +212,6 @@ export class WetrisCore {
         this.makeNewMino();
         this.isUsedHold = false;
     }
-
 
     protected makeNewMino() {
         if (!this.nextMinos.length) {
@@ -315,16 +309,13 @@ export class WetrisCore {
         if (lines === 4) {
             info("Wetris");
             score += 2000;
-        }
-        else if (modeTspin === 1) {
+        } else if (modeTspin === 1) {
             info("T-spin");
             score += 1000 * lines;
-        }
-        else if (modeTspin === 2) {
+        } else if (modeTspin === 2) {
             info("T-spin mini");
             score += 500 * lines;
-        }
-        else {
+        } else {
             // default
             score += 100 * lines;
         }
